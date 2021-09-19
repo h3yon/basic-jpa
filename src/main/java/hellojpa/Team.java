@@ -11,8 +11,8 @@ public class Team {
     private Long id;
     private String name;
 
-    // 읽기 전용. 가짜 매핑
-    @OneToMany(mappedBy = "team")
+    @OneToMany
+    @JoinColumn(name = "TEAM_ID")
     private List<Member> members = new ArrayList<>();
 
     public Long getId() {
@@ -39,10 +39,10 @@ public class Team {
         this.members = members;
     }
 
-    public void addMember(Member member) {
-        member.setTeam(this);
-        members.add(member);
-    }
+//    public void addMember(Member member) {
+//        member.setTeam(this);
+//        members.add(member);
+//    }
 
     // 무한 루프~
     @Override
