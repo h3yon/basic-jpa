@@ -15,12 +15,12 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setId(2L);
-            member.setId("HelloB");
+            Member findMember = em.find(Member.class, 1L);
 
-            em.persist(member);
+            // persist로 저장 안 해도 됨
+            findMember.setName("HelloJPA");
 
+            // JPA가 변경되었는지 커밋할 때쯤 체크
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
