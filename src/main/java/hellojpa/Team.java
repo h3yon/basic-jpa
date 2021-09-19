@@ -11,6 +11,7 @@ public class Team {
     private Long id;
     private String name;
 
+    // 읽기 전용. 가짜 매핑
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 
@@ -36,5 +37,20 @@ public class Team {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+    }
+
+    public void addMember(Member member) {
+        member.setTeam(this);
+        members.add(member);
+    }
+
+    // 무한 루프~
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", members=" + members +
+                '}';
     }
 }

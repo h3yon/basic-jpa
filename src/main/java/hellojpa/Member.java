@@ -43,7 +43,23 @@ public class Member {
         return team;
     }
 
+//    public void changeTeam(Team team) {
+//        // 양쪽으로 세팅해줌. 편의 메서드
+//        this.team = team;
+//        team.getMembers().add(this);
+//    }
+
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    // 무한 루프~
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", team=" + team +
+                '}';
     }
 }
