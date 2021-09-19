@@ -16,20 +16,18 @@ public class JpaMain {
         tx.begin();
 
         try {
-//            Member findMember = em.find(Member.class, 1L);
 
-            // member 엔티티를 선택함 + pagination
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(10)
-                    .getResultList();
+            // 비영속
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            for (Member member : result){
-                System.out.println("member.name = " + member.getName());
-            }
+            // 영속
+            System.out.println("=== BEFORE ===");
+            em.persist(member); // entity manager가 관리
+            em.detach(member); // 분리
+            System.out.println("=== AFTER ===");
 
-
-            // JPA가 변경되었는지 커밋할 때쯤 체크
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
