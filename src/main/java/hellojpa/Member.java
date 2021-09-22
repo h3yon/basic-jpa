@@ -1,11 +1,7 @@
 package hellojpa;
 
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Member extends BaseEntity {
@@ -20,10 +16,6 @@ public class Member extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
     private Team team;
-
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
 
     public Long getId() {
         return id;
@@ -40,10 +32,10 @@ public class Member extends BaseEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-//
-//    public Team getTeam() {
-//        return team;
-//    }
+
+    public Team getTeam() {
+        return team;
+    }
 
 //    public void changeTeam(Team team) {
 //        // 양쪽으로 세팅해줌. 편의 메서드
@@ -51,8 +43,8 @@ public class Member extends BaseEntity {
 //        team.getMembers().add(this);
 //    }
 //
-//    public void setTeam(Team team) {
-//        this.team = team;
-//    }
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 
 }
