@@ -1,5 +1,7 @@
 package hellojpa;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -27,17 +29,21 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member2.getId());
+            Member refMember = em.getReference(Member.class, member1.getId());
+            System.out.println("refMember = " + refMember.getClass()); // Proxy
 
-            // 준영속 상태일 때 프록시를 초기화할 경우(close / detach / clear)
-            em.detach(refMember);
-
+            // 초기화(이거 없으면 아래 isLoaded false)
             refMember.getUsername();
+            // 로딩되는지 여부 확인 -> false. 초기화 안 해서.
+            // 위에 초기화한 걸로 바꿨으니까 true
+            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
+
+            // 강제 초기화 / member.getName();
+            Hibernate.initialize(refMember);
 
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
-            // 프록시를 초기화하지 못한다는 에러 발생. 더이상 영속성 컨텍스트로 관리 X
             e.printStackTrace();
         } finally {
             em.close();
