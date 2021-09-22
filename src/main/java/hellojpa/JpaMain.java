@@ -25,12 +25,13 @@ public class JpaMain {
             parent.addChild(child1);
             parent.addChild(child2);
 
-            // parent persist 하면 child도 persist 하고 싶음.
             em.persist(parent);
 
-            // 이제 CASCADE 진행 후 아래 부분 주석 처리
-//            em.persist(child1);
-//            em.persist(child2);
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
 
             tx.commit();
         } catch (Exception e) {
