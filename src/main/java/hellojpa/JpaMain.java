@@ -35,8 +35,8 @@ public class JpaMain {
             System.out.println("m = " + m.getTeam().getClass()); // proxy
 
             System.out.println("==============");
-            // 프록시 객체가 초기화되면서 DB에서 가져옴
-            m.getTeam().getName();
+            // 그냥 사용 가능
+            System.out.println("teamName = " + m.getTeam().getName());
             System.out.println("==============");
 
             tx.commit();

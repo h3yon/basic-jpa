@@ -13,8 +13,8 @@ public class Member extends BaseEntity {
     @Column(name = "USERNAME")
     private String username;
 
-    // LAZY로 하면 프록시로 가져옴. Member만 조회하도록
-    @ManyToOne(fetch = FetchType.LAZY)
+    // 초기화가 필요 없는 즉시로딩
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Team team;
 
