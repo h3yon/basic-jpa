@@ -2,6 +2,7 @@ package hellojpa;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Member extends BaseEntity {
@@ -14,9 +15,25 @@ public class Member extends BaseEntity {
     private String username;
 
     // ~ToOne은 꼭 아래처럼 LAZY 해줘야됨
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Team team;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn
+//    private Team team;
+
+    //기간 Period
+    @Embedded
+    private Period workPeriod;
+
+    //주소
+    @Embedded
+    private Address homeAddress;
+    //주소(AttributeOverrides 필수)
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
+            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_ZIPCODE"))
+    })
+    private Address workAddress;
 
     public Long getId() {
         return id;
@@ -34,18 +51,19 @@ public class Member extends BaseEntity {
         this.username = username;
     }
 
-    public Team getTeam() {
-        return team;
+    public Period getWorkPeriod() {
+        return workPeriod;
     }
 
-//    public void changeTeam(Team team) {
-//        // 양쪽으로 세팅해줌. 편의 메서드
-//        this.team = team;
-//        team.getMembers().add(this);
-//    }
-//
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setWorkPeriod(Period workPeriod) {
+        this.workPeriod = workPeriod;
     }
 
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
 }
