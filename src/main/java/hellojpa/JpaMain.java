@@ -27,31 +27,17 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            Member m1 = em.find(Member.class, member1.getId());
-            Member m2 = em.getReference(Member.class, member2.getId());
+            Member refMember = em.getReference(Member.class, member2.getId());
 
-            System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass())); // false
-            System.out.println("m1 == m2: " + (m1 instanceof Member)); // true
+            // 준영속 상태일 때 프록시를 초기화할 경우(close / detach / clear)
+            em.detach(refMember);
 
-            //select 쿼리가 안 나감 -> 프록시
-            Member refMember = em.getReference(Member.class, member1.getId());
-            // 하이버네이트가 만든 가짜 클래스 -> 프록시
-            System.out.println("findMember = " + refMember.getClass());
-            // select 쿼리 안 나감(위에 member.getId()가 있으니까) -> 프록시
-            System.out.println("findMember.id = " + refMember.getId()); // Proxy
-
-            // 얘는 DB에 없으니까 쿼리가 나감 -> 실제 객체
-            System.out.println("findMember.username = " + refMember.getUsername());
-
-            // DB에 실제 조회함. 근데 아래에서 프록시로 반환
-            // 그 이유? 위에서 getReference에서 프록시를 한번 조회해서 find 하면 프록시로 반환해버림
-            Member findMember = em.find(Member.class, member1.getId()); // Member
-            // JPA에서는 참을 보장
-            System.out.println("refMember == findMember: " + (refMember == findMember));
+            refMember.getUsername();
 
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
+            // 프록시를 초기화하지 못한다는 에러 발생. 더이상 영속성 컨텍스트로 관리 X
             e.printStackTrace();
         } finally {
             em.close();
