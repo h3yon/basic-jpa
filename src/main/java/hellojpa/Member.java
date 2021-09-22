@@ -13,8 +13,8 @@ public class Member extends BaseEntity {
     @Column(name = "USERNAME")
     private String username;
 
-    // 초기화가 필요 없는 즉시로딩
-    @ManyToOne(fetch = FetchType.EAGER)
+    // ~ToOne은 꼭 아래처럼 LAZY 해줘야됨
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Team team;
 
