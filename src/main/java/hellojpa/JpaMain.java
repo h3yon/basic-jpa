@@ -18,28 +18,26 @@ public class JpaMain {
 
         try {
 
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
             Member member1 = new Member();
             member1.setUsername("hello");
             em.persist(member1);
 
-            Member member2 = new Member();
-            member2.setUsername("hello");
-            em.persist(member2);
+            member1.setTeam(team);
 
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember = " + refMember.getClass()); // Proxy
+            Member m = em.find(Member.class, member1.getId()); // member만 조회
+            System.out.println("m = " + m.getTeam().getClass()); // proxy
 
-            // 초기화(이거 없으면 아래 isLoaded false)
-            refMember.getUsername();
-            // 로딩되는지 여부 확인 -> false. 초기화 안 해서.
-            // 위에 초기화한 걸로 바꿨으니까 true
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
-
-            // 강제 초기화 / member.getName();
-            Hibernate.initialize(refMember);
+            System.out.println("==============");
+            // 프록시 객체가 초기화되면서 DB에서 가져옴
+            m.getTeam().getName();
+            System.out.println("==============");
 
             tx.commit();
         } catch (Exception e) {
