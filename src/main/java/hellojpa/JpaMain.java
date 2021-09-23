@@ -33,8 +33,9 @@ public class JpaMain {
             // ADDRESS에 잘 들어가 있음(다른 테이블인데도 persist 안 해도 들어가 있음)
             // 값 타입이기 때문
             // member에 의존! -> 자동
-            member.getAddressHistory().add(new Address("old1", "street", "1000"));
-            member.getAddressHistory().add(new Address("old2", "street", "1000"));
+            // 일대다로 진행
+            member.getAddressHistory().add(new AddressEntity("old1", "street", "1000"));
+            member.getAddressHistory().add(new AddressEntity("old2", "street", "1000"));
 
             em.persist(member);
 
@@ -45,18 +46,26 @@ public class JpaMain {
 
             System.out.println("============ START =============");
             Member findMember = em.find(Member.class, member.getId());
-            // 지연로딩 homeAddress와 같이 select
 
-            List<Address> addressHistory = findMember.getAddressHistory();
-            for(Address address : addressHistory){
-                System.out.println("address = " + address.getCity());
-            }
+            // homeCity -> newCity
+//            findMember.getAddressHistory().setCity("newCity");
+            // 값 타입 -> 사이드 이펙트 발생 가능
 
-            Set<String> favoriteFoods = findMember.getFavoriteFoods();
-            for(String favoriteFood: favoriteFoods){
-                System.out.println("favoriteFood = " + favoriteFood);
-            }
+            // 통으로 갈아끼워야 함
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
 
+            // 치킨 -> 한식
+            // 알아서 바꿔짐
+            // 값 타입 컬렉션들은 멤버에 의존
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
+            // old1 -> new
+            // equals로 찾아서 삭제
+            // **** 값 타입 컬렉션 변경 사항 발생 시 주인 entity 관련 모든 데이터 삭제 후 현재 값 다시 저장
+//             findMember.getAddressHistory().remove(new Address("old1", "street", "1000"));
+//             findMember.getAddressHistory().add(new Address("newCity1", "street", "1000"));
 
             tx.commit();
         } catch (Exception e) {
