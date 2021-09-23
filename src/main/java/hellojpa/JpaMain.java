@@ -24,22 +24,9 @@ public class JpaMain {
             member.setHomeAddress(address);
             em.persist(member);
 
-            // 값 타입의 부작용 때문에
-            // 값 타입의 복사 필요
-            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
-
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            // 기본 타입이 아니라 객체 타입이기 때문에
-            // 객체의 공유 참조는 피할 수 없다,,
-            // 그래서 setter 지우기
-            member2.setHomeAddress(copyAddress);
-            em.persist(member2);
-
-            // 값 타입의 부작용 -> 수정 불가능하도록하기(불변 객체)
-            member.getHomeAddress().setCity("newCity");
-
-
+            // 불변객체를 바꾸고 싶을 경우에는 새로 만들기 필요
+            Address newAddress = new Address("NewCity", address.getStreet(), address.getZipcode());
+            member.setHomeAddress(newAddress);
 
             tx.commit();
         } catch (Exception e) {

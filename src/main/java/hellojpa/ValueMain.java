@@ -4,26 +4,17 @@ public class ValueMain {
 
     public static void main(String[] args) {
 
-        /**
-         * 1. 기본 타입: 공유 X
-         */
         int a = 10;
-        int b = a;
-        b = 20;
+        int b = 10;
 
-        System.out.println("a = " + a); // 10
-        System.out.println("b = " + b); // 20
+        System.out.println("a == b: " + (a == b)); // true
 
-        /**
-         * 2. 래퍼 클래스: 공유 O
-         */
-        Integer c = new Integer(10);
-        Integer d = c;
 
-//        c.setValue(20);
+        Address address1 = new Address("city", "street", "1000");
+        Address address2 = new Address("city", "street", "1000");
 
-        System.out.println("a = " + a); // 20
-        System.out.println("b = " + b); // 20
+        System.out.println("address1 == address2: " + (address1 == address2)); // false
+        System.out.println("address1 equals address2: " + (address1.equals(address2))); // false -> true(Address에 equals, hashCode 추가 필요)
 
     }
 }
