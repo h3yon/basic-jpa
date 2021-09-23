@@ -17,12 +17,24 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("hello");
-            member.setHomeAddress(new Address("city", "street", "1000"));
-            member.setWorkPeriod(new Period());
+            Address address = new Address("city", "street", "1000");
 
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(address);
             em.persist(member);
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            member2.setHomeAddress(address);
+            em.persist(member2);
+
+            // 값 타입의 부작용
+            // member2도 newCity로 변경되어 있음..!!
+            // 임베디드 타입을 공유하면 이렇게 사이드 이펙트가 생김!!
+            member.getHomeAddress().setCity("newCity");
+
+
 
             tx.commit();
         } catch (Exception e) {
